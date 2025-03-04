@@ -15,7 +15,7 @@
   ],
   "routes": [
     {
-      "src": "/get_joke",
+      "src": "/get_recipe",
       "dest": "/HostelFoodBot.py"
     },
     {
