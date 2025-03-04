@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooking Chatbot</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0; /* Default background color */
+            color: #333; /* Default text color */
+            overflow: hidden; /* Prevent overflow */
+            transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+        }
+        .header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            text-align: left;
+        }
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .theme-toggle input {
+            display: none; /* Hide the default checkbox */
+        }
+        .toggle-switch {
+            width: 50px;
+            height: 24px;
+            background-color: #ccc;
+            border-radius: 50px;
+            position: relative;
+            transition: background-color 0.3s;
+            margin-left: 5px; /* Space between label and switch */
+        }
+        .toggle-switch::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+        .theme-toggle input:checked + .toggle-switch {
+            background-color: #30a2ff; /* Color when checked */
+        }
+        .theme-toggle input:checked + .toggle-switch::before {
+            transform: translateX(26px); /* Move the toggle */
+        }
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        .chat-output {
+            border: 1px solid #ccc;
+            padding: 15px; /* Increased padding for better spacing */
+            height: 700px; /* Increased height for better comfort */
+            overflow-y: auto;
+            margin-bottom: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .message {
+            padding: 15px; /* Increased padding for larger bubbles */
+            border-radius: 10px; /* More rounded corners */
+            max-width: 80%;
+            word-wrap: break-word;
+            font-size: 1.1em; /* Increased font size for better readability */
+            color: #000; /* Set text color to black for contrast */
+        }
+        .user-message {
+            background-color: #30a2ff; /* Blue for user messages */
+            align-self: flex-end; /* Align user messages to the right */
+        }
+        .bot-message {
+            background-color: #4bffab; /* Green for bot messages */
+            align-self: flex-start; /* Align bot messages to the left */
+        }
+        .input-container {
+            display: flex;
+            width: 100%; /* Match width of chat output */
+        }
+        .input-container textarea {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            color: #000; /* Default text color for light mode */
+            background-color: #fff; /* Keep background white for input */
+            resize: none; /* Prevent resizing */
+            height: 50px; /* Set a fixed height for the input */
+        }
+        .theme-toggle input:checked ~ .input-container textarea {
+            color: #fff; /* Text color for dark mode */
+            background-color: #444; /* Dark background for input in dark mode */
+        }
+        .input-container button {
+            padding: 10px;
+            background-color: rgb(0, 116, 155);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        /* Loading spinner styles */
+        .spinner {
+            display: none; /* Hidden by default */
+            margin: 10px auto;
+            font-size: 24px; /* Size of the spinner */
+        }
+        .spinner span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin: 0 2px;
+            border-radius: 50%;
+            background: #30a2ff; /* Color of the dots */
+            animation: bounce 0.6s infinite alternate;
+        }
+        .spinner span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .spinner span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes bounce {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="logo">Cooking Chatbot</h1>
+        <h3>Powered by Gemini 2.0 Flash</h3>
+    </div>
+    <div class="theme-toggle">
+        <label>
+            Dark Mode:
+            <input type="checkbox" id="themeSwitch"> 
+            <div class="toggle-switch"></div>
+        </label>
+    </div>
+    <div class="chat-container">
+        <div id="chatOutput" class="chat-output">Welcome! Ask me for recipes based on your ingredients.</div>
+        <div class="spinner" id="loadingSpinner">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="input-container">
+            <textarea id="ingredientsInput" placeholder="Enter ingredients (comma-separated)" rows="1"></textarea>
+            <button id="getRecipeButton">Get Recipe</button>
+        </div>
+    </div>
+    <script>
+        const themeSwitch = document.getElementById('themeSwitch');
+        const body = document.body;
+        const ingredientsInput = document.getElementById('ingredientsInput');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+
+        // Check local storage for dark mode preference
+        const darkMode = localStorage.getItem('darkMode') === 'true';
+        themeSwitch.checked = darkMode;
+        if (darkMode) {
+            body.style.backgroundColor = '#333';
+            body.style.color = '#f0f0f0';
+            document.querySelectorAll('.chat-output, .input-container button').forEach(el => {
+                el.style.backgroundColor = '#444';
+                el.style.color = '#f0f0f0';
+                el.style.borderColor = '#666';
+            });
+            ingredientsInput.style.backgroundColor = '#444'; // Keep input background dark
+            ingredientsInput.style.color = '#fff'; // Set input text color to white
+        }
+
+        themeSwitch.addEventListener('change', () => {
+            if (themeSwitch.checked) {
+                body.style.backgroundColor = '#333';
+                body.style.color = '#f0f0f0';
+                document.querySelectorAll('.chat-output, .input-container button').forEach(el => {
+                    el.style.backgroundColor = '#444';
+                    el.style.color = '#f0f0f0';
+                    el.style.borderColor = '#666';
+                });
+                ingredientsInput.style.backgroundColor = '#444'; // Keep input background dark
+                ingredientsInput.style.color = '#fff'; // Set input text color to white
+                localStorage.setItem('darkMode', 'true'); // Save preference
+            } else {
+                body.style.backgroundColor = '#f0f0f0';
+                body.style.color = '#333';
+                document.querySelectorAll('.chat-output, .input-container button').forEach(el => {
+                    el.style.backgroundColor = '#fff';
+                    el.style.color = '#333';
+                    el.style.borderColor = '#ccc';
+                });
+                ingredientsInput.style.backgroundColor = '#fff'; // Keep input background light
+                ingredientsInput.style.color = '#000'; // Set input text color to black
+                localStorage.setItem('darkMode', 'false'); // Save preference
+            }
+        });
+
+        ingredientsInput.addEventListener('keydown', async (event) => {
+            if (event.key === 'Enter') {
+                if (event.shiftKey) {
+                    // Allow new line
+                    return;
+                } else {
+                    event.preventDefault(); // Prevent default behavior (new line)
+                    const ingredients = ingredientsInput.value.split(',').map(item => item.trim());
+                    const dietaryPreference = 'vegetarian'; // You can modify this to allow user selection
+
+                    // Display user message
+                    const userMessage = document.createElement('div');
+                    userMessage.className = 'message user-message';
+                    userMessage.innerText = `You: ${ingredients.join(', ')}`;
+                    document.getElementById('chatOutput').appendChild(userMessage);
+
+                    // Clear the input box
+                    ingredientsInput.value = '';
+
+                    // Show loading spinner
+                    loadingSpinner.style.display = 'block';
+
+                    try {
+                        const response = await fetch('/get_recipe', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ ingredients, dietary_preference: dietaryPreference })
+                        });
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        const data = await response.json();
+
+                        // Hide loading spinner
+                        loadingSpinner.style.display = 'none';
+
+                        // Display bot message
+                        const botMessage = document.createElement('div');
+                        botMessage.className = 'message bot-message';
+                        botMessage.innerText = `Bot: ${data.recipe}`;
+                        document.getElementById('chatOutput').appendChild(botMessage);
+                    } catch (error) {
+                        console.error('Error fetching recipe:', error);
+                        loadingSpinner.style.display = 'none'; // Hide loading spinner
+                        const errorMessage = document.createElement('div');
+                        errorMessage.className = 'message bot-message';
+                        errorMessage.innerText = 'Bot: Failed to fetch a recipe. Please try again.';
+                        document.getElementById('chatOutput').appendChild(errorMessage);
+                    }
+                }
+            }
+        });
+
+        document.getElementById('getRecipeButton').addEventListener('click', async () => {
+            ingredientsInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        });
+    </script>
+</body>
+</html>

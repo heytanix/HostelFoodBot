@@ -1,1 +1,1 @@
-# HostelFoodBot
+# JokeGPT
