@@ -16,7 +16,7 @@
   "routes": [
     {
       "src": "/get_joke",
-      "dest": "HostelFoodBot.py"
+      "dest": "/HostelFoodBot.py"
     },
     {
       "src": "/",
