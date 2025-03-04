@@ -154,6 +154,22 @@
                 transform: translateY(-10px);
             }
         }
+
+        /* Media Queries for Mobile Optimization */
+        @media (max-width: 600px) {
+            .chat-output {
+                height: 500px; /* Adjust height for smaller screens */
+            }
+            .message {
+                font-size: 1em; /* Smaller font size for mobile */
+            }
+            .input-container textarea {
+                height: 40px; /* Adjust height for smaller screens */
+            }
+            .input-container button {
+                padding: 8px; /* Smaller button padding */
+            }
+        }
     </style>
 </head>
 <body>
