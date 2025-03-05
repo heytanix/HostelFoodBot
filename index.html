@@ -11,7 +11,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh; /* Use min-height instead of height for flexibility */
+            min-height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -21,8 +21,8 @@
         }
         .header {
             position: absolute;
-            top: 2vh; /* Relative unit */
-            left: 2vw; /* Relative unit */
+            top: 2vh;
+            left: 2vw;
             text-align: left;
         }
         .theme-toggle {
@@ -37,7 +37,7 @@
             display: none;
         }
         .toggle-switch {
-            width: 3rem; /* Relative unit */
+            width: 3rem;
             height: 1.5rem;
             background-color: #ccc;
             border-radius: 50px;
@@ -60,19 +60,19 @@
             background-color: #30a2ff;
         }
         .theme-toggle input:checked + .toggle-switch::before {
-            transform: translateX(1.625rem); /* Adjusted for relative size */
+            transform: translateX(1.625rem);
         }
         .chat-container {
             display: flex;
             flex-direction: column;
-            width: 90vw; /* Relative width */
-            max-width: 600px; /* Retain max-width for larger screens */
+            width: 90vw;
+            max-width: 600px;
             margin: 2vh auto;
         }
         .chat-output {
             border: 1px solid #ccc;
-            padding: 1.5vh; /* Relative padding */
-            height: 70vh; /* Relative height */
+            padding: 1.5vh;
+            height: 70vh;
             overflow-y: auto;
             margin-bottom: 1vh;
             background-color: #fff;
@@ -87,7 +87,7 @@
             border-radius: 0.625rem;
             max-width: 80%;
             word-wrap: break-word;
-            font-size: clamp(1em, 2.5vw, 1.1em); /* Dynamic font size */
+            font-size: clamp(1em, 2.5vw, 1.1em);
             color: #000;
         }
         .user-message {
@@ -110,8 +110,8 @@
             color: #000;
             background-color: #fff;
             resize: none;
-            height: 5vh; /* Relative height */
-            font-size: clamp(0.9em, 2vw, 1em); /* Dynamic font size */
+            height: 5vh;
+            font-size: clamp(0.9em, 2vw, 1em);
         }
         .theme-toggle input:checked ~ .input-container textarea {
             color: #fff;
@@ -125,7 +125,7 @@
             border-radius: 0.3125rem;
             cursor: pointer;
             margin-left: 0.5vw;
-            font-size: clamp(0.9em, 2vw, 1em); /* Dynamic font size */
+            font-size: clamp(0.9em, 2vw, 1em);
         }
         .spinner {
             display: none;
@@ -156,8 +156,7 @@
             }
         }
 
-        /* Enhanced Media Queries for Scalability */
-        @media (max-width: 768px) { /* Tablets and smaller */
+        @media (max-width: 768px) {
             .chat-container {
                 width: 95vw;
             }
@@ -172,7 +171,7 @@
             }
         }
 
-        @media (max-width: 480px) { /* Mobile devices */
+        @media (max-width: 480px) {
             .chat-container {
                 width: 98vw;
             }
@@ -200,7 +199,7 @@
             }
         }
 
-        @media (min-width: 1200px) { /* Large screens */
+        @media (min-width: 1200px) {
             .chat-container {
                 width: 70vw;
             }
