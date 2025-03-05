@@ -11,80 +11,201 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh; /* Use min-height instead of height for flexibility */
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
             color: #333;
+            overflow: hidden;
             transition: background-color 0.3s, color 0.3s;
         }
         .header {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            top: 2vh; /* Relative unit */
+            left: 2vw; /* Relative unit */
             text-align: left;
+        }
+        .theme-toggle {
+            position: absolute;
+            top: 2vh;
+            right: 2vw;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .theme-toggle input {
+            display: none;
+        }
+        .toggle-switch {
+            width: 3rem; /* Relative unit */
+            height: 1.5rem;
+            background-color: #ccc;
+            border-radius: 50px;
+            position: relative;
+            transition: background-color 0.3s;
+            margin-left: 0.5rem;
+        }
+        .toggle-switch::before {
+            content: '';
+            position: absolute;
+            width: 1.25rem;
+            height: 1.25rem;
+            background-color: white;
+            border-radius: 50%;
+            top: 0.125rem;
+            left: 0.125rem;
+            transition: transform 0.3s;
+        }
+        .theme-toggle input:checked + .toggle-switch {
+            background-color: #30a2ff;
+        }
+        .theme-toggle input:checked + .toggle-switch::before {
+            transform: translateX(1.625rem); /* Adjusted for relative size */
         }
         .chat-container {
             display: flex;
             flex-direction: column;
-            width: 95%;
-            max-width: 600px;
-            height: 85vh;
+            width: 90vw; /* Relative width */
+            max-width: 600px; /* Retain max-width for larger screens */
+            margin: 2vh auto;
         }
         .chat-output {
-            flex-grow: 1;
             border: 1px solid #ccc;
-            padding: 15px;
+            padding: 1.5vh; /* Relative padding */
+            height: 70vh; /* Relative height */
             overflow-y: auto;
+            margin-bottom: 1vh;
             background-color: #fff;
-            border-radius: 8px;
+            border-radius: 0.5rem;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 1vh;
+        }
+        .message {
+            padding: 1.5vh;
+            border-radius: 0.625rem;
+            max-width: 80%;
+            word-wrap: break-word;
+            font-size: clamp(1em, 2.5vw, 1.1em); /* Dynamic font size */
+            color: #000;
+        }
+        .user-message {
+            background-color: #30a2ff;
+            align-self: flex-end;
+        }
+        .bot-message {
+            background-color: #4bffab;
+            align-self: flex-start;
         }
         .input-container {
             display: flex;
             width: 100%;
-            margin-top: 10px;
         }
         .input-container textarea {
             flex: 1;
-            padding: 10px;
+            padding: 1vh;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 0.3125rem;
+            color: #000;
+            background-color: #fff;
             resize: none;
-            min-height: 40px;
-            max-height: 100px;
-            overflow-y: auto;
-            font-size: 1rem;
+            height: 5vh; /* Relative height */
+            font-size: clamp(0.9em, 2vw, 1em); /* Dynamic font size */
+        }
+        .theme-toggle input:checked ~ .input-container textarea {
+            color: #fff;
+            background-color: #444;
         }
         .input-container button {
-            padding: 12px;
-            background-color: #00749b;
+            padding: 1vh;
+            background-color: rgb(0, 116, 155);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 0.3125rem;
             cursor: pointer;
-            margin-left: 5px;
-            font-size: 1rem;
+            margin-left: 0.5vw;
+            font-size: clamp(0.9em, 2vw, 1em); /* Dynamic font size */
         }
-        @media (max-width: 768px) {
-            .header {
-                position: static;
-                text-align: center;
-                margin-bottom: 10px;
+        .spinner {
+            display: none;
+            margin: 1vh auto;
+            font-size: 1.5rem;
+        }
+        .spinner span {
+            display: inline-block;
+            width: 0.5rem;
+            height: 0.5rem;
+            margin: 0 0.125rem;
+            border-radius: 50%;
+            background: #30a2ff;
+            animation: bounce 0.6s infinite alternate;
+        }
+        .spinner span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .spinner span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes bounce {
+            0% {
+                transform: translateY(0);
             }
+            100% {
+                transform: translateY(-0.625rem);
+            }
+        }
+
+        /* Enhanced Media Queries for Scalability */
+        @media (max-width: 768px) { /* Tablets and smaller */
             .chat-container {
-                height: 90vh;
+                width: 95vw;
+            }
+            .chat-output {
+                height: 60vh;
             }
             .input-container textarea {
-                min-height: 35px;
-                font-size: 0.9rem;
+                height: 4vh;
             }
             .input-container button {
-                padding: 10px;
-                font-size: 0.9rem;
+                padding: 0.8vh;
+            }
+        }
+
+        @media (max-width: 480px) { /* Mobile devices */
+            .chat-container {
+                width: 98vw;
+            }
+            .chat-output {
+                height: 50vh;
+            }
+            .header {
+                top: 1vh;
+                left: 1vw;
+            }
+            .theme-toggle {
+                top: 1vh;
+                right: 1vw;
+            }
+            .toggle-switch {
+                width: 2.5rem;
+                height: 1.25rem;
+            }
+            .toggle-switch::before {
+                width: 1rem;
+                height: 1rem;
+            }
+            .theme-toggle input:checked + .toggle-switch::before {
+                transform: translateX(1.25rem);
+            }
+        }
+
+        @media (min-width: 1200px) { /* Large screens */
+            .chat-container {
+                width: 70vw;
+            }
+            .chat-output {
+                height: 80vh;
             }
         }
     </style>
@@ -94,37 +215,122 @@
         <h1 class="logo">Cooking Chatbot</h1>
         <h3>Powered by Gemini 2.0 Flash</h3>
     </div>
+    <div class="theme-toggle">
+        <label>
+            Dark Mode:
+            <input type="checkbox" id="themeSwitch"> 
+            <div class="toggle-switch"></div>
+        </label>
+    </div>
     <div class="chat-container">
         <div id="chatOutput" class="chat-output">Welcome! Ask me for recipes based on your ingredients.</div>
+        <div class="spinner" id="loadingSpinner">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
         <div class="input-container">
-            <textarea id="ingredientsInput" placeholder="Enter ingredients (comma-separated)"></textarea>
+            <textarea id="ingredientsInput" placeholder="Enter ingredients (comma-separated)" rows="1"></textarea>
             <button id="getRecipeButton">Get Recipe</button>
         </div>
     </div>
     <script>
+        const themeSwitch = document.getElementById('themeSwitch');
+        const body = document.body;
         const ingredientsInput = document.getElementById('ingredientsInput');
-        const chatOutput = document.getElementById('chatOutput');
-        const getRecipeButton = document.getElementById('getRecipeButton');
-        
-        getRecipeButton.addEventListener('click', () => {
-            const ingredients = ingredientsInput.value.trim();
-            if (!ingredients) return;
-            
-            const userMessage = document.createElement('div');
-            userMessage.className = 'message user-message';
-            userMessage.innerText = `You: ${ingredients}`;
-            chatOutput.appendChild(userMessage);
-            chatOutput.scrollTop = chatOutput.scrollHeight;
-            
-            setTimeout(() => {
-                const botMessage = document.createElement('div');
-                botMessage.className = 'message bot-message';
-                botMessage.innerText = `Bot: Here's a recipe with ${ingredients}!`;
-                chatOutput.appendChild(botMessage);
-                chatOutput.scrollTop = chatOutput.scrollHeight;
-            }, 1000);
-            
-            ingredientsInput.value = '';
+        const loadingSpinner = document.getElementById('loadingSpinner');
+
+        const darkMode = localStorage.getItem('darkMode') === 'true';
+        themeSwitch.checked = darkMode;
+        if (darkMode) {
+            body.style.backgroundColor = '#333';
+            body.style.color = '#f0f0f0';
+            document.querySelectorAll('.chat-output, .input-container button').forEach(el => {
+                el.style.backgroundColor = '#444';
+                el.style.color = '#f0f0f0';
+                el.style.borderColor = '#666';
+            });
+            ingredientsInput.style.backgroundColor = '#444';
+            ingredientsInput.style.color = '#fff';
+        }
+
+        themeSwitch.addEventListener('change', () => {
+            if (themeSwitch.checked) {
+                body.style.backgroundColor = '#333';
+                body.style.color = '#f0f0f0';
+                document.querySelectorAll('.chat-output, .input-container button').forEach(el => {
+                    el.style.backgroundColor = '#444';
+                    el.style.color = '#f0f0f0';
+                    el.style.borderColor = '#666';
+                });
+                ingredientsInput.style.backgroundColor = '#444';
+                ingredientsInput.style.color = '#fff';
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                body.style.backgroundColor = '#f0f0f0';
+                body.style.color = '#333';
+                document.querySelectorAll('.chat-output, .input-container button').forEach(el => {
+                    el.style.backgroundColor = '#fff';
+                    el.style.color = '#333';
+                    el.style.borderColor = '#ccc';
+                });
+                ingredientsInput.style.backgroundColor = '#fff';
+                ingredientsInput.style.color = '#000';
+                localStorage.setItem('darkMode', 'false');
+            }
+        });
+
+        ingredientsInput.addEventListener('keydown', async (event) => {
+            if (event.key === 'Enter') {
+                if (event.shiftKey) {
+                    return;
+                } else {
+                    event.preventDefault();
+                    const ingredients = ingredientsInput.value.split(',').map(item => item.trim());
+                    const dietaryPreference = 'vegetarian';
+
+                    const userMessage = document.createElement('div');
+                    userMessage.className = 'message user-message';
+                    userMessage.innerText = `You: ${ingredients.join(', ')}`;
+                    document.getElementById('chatOutput').appendChild(userMessage);
+
+                    ingredientsInput.value = '';
+
+                    loadingSpinner.style.display = 'block';
+
+                    try {
+                        const response = await fetch('/get_recipe', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ ingredients, dietary_preference: dietaryPreference })
+                        });
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        const data = await response.json();
+
+                        loadingSpinner.style.display = 'none';
+
+                        const botMessage = document.createElement('div');
+                        botMessage.className = 'message bot-message';
+                        botMessage.innerText = `Bot: ${data.recipe}`;
+                        document.getElementById('chatOutput').appendChild(botMessage);
+                    } catch (error) {
+                        console.error('Error fetching recipe:', error);
+                        loadingSpinner.style.display = 'none';
+                        const errorMessage = document.createElement('div');
+                        errorMessage.className = 'message bot-message';
+                        errorMessage.innerText = 'Bot: Failed to fetch a recipe. Please try again.';
+                        document.getElementById('chatOutput').appendChild(errorMessage);
+                    }
+                }
+            }
+        });
+
+        document.getElementById('getRecipeButton').addEventListener('click', async () => {
+            ingredientsInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         });
     </script>
 </body>
